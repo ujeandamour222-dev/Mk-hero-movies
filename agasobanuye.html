@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IMIRASIRE AGASOBANUYE - Rwandan Movie Streaming</title>
+  
+  <!-- Plyr CSS -->
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+  
+  <!-- Tailwind CSS CDN for styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    /* Dark & Red Theme Palette */
+    :root {
+      --plyr-color-main: #e50914;
+      --plyr-video-background: #0f0f0f;
+      --plyr-badge-border-radius: 6px;
+      --plyr-control-radius: 8px;
+    }
+
+    body {
+      background-color: #0f0f0f;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* Video Player Wrapper for 16:9 Aspect Ratio & Masking */
+    .player-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 Aspect Ratio */
+      background: #000;
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      border: 1px solid #262626;
+    }
+
+    /* Inner Container holding Plyr */
+    .player-wrapper .plyr-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Plyr custom responsiveness */
+    .plyr {
+      height: 100% !important;
+      width: 100% !important;
+      border-radius: 1rem;
+    }
+
+    .plyr__video-embed {
+      height: 100% !important;
+      width: 100% !important;
+      padding-bottom: 0 !important;
+    }
+
+    /* Slight scaling & positioning to keep video uncropped while masking YouTube overlays */
+    .plyr__video-embed iframe {
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) scale(1.04) !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* Top and Bottom Masking Shields to permanently hide YouTube watermark/title */
+    .mask-shield-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .mask-shield-bottom-right {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 140px;
+      height: 48px;
+      background: rgba(0, 0, 0, 0.9);
+      border-top-left-radius: 12px;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #141414;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #e50914;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- STICKY HEADER -->
+  <header class="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-neutral-800 px-4 lg:px-8 py-3.5 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-red-600 flex items-center justify-center font-black text-white text-lg shadow-lg shadow-red-600/40">
+        M
+      </div>
+      <div>
+        <h1 class="text-lg font-black tracking-tight text-white flex items-center gap-2">
+          IMIRASIRE <span class="text-red-600">AGASOBANUYE</span>
+        </h1>
+        <p class="text-[10px] text-neutral-400 font-bold uppercase tracking-wider">Rwandan Translated Cinema</p>
+      </div>
+    </div>
+
+    <!-- Navigation & Action Icons -->
+    <div class="flex items-center gap-3">
+      <button class="px-3.5 py-1.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs font-bold text-neutral-300 hover:text-white hover:border-red-600/50 transition flex items-center gap-1.5">
+        <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <span class="hidden sm:inline">Shaka...</span>
+      </button>
+      <a href="#vip" class="px-4 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-red-600/30 transition active:scale-95">
+        VIP ACCESS
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6 space-y-6">
+
+    <!-- VIDEO PLAYER SECTION -->
+    <section class="space-y-3">
+      <div class="player-wrapper">
+        <div class="plyr-container">
+          <!-- Plyr Target Div -->
+          <div id="player" class="plyr__video-embed"></div>
+        </div>
+
+        <!-- Watermark Badge Overlay -->
+        <div class="absolute top-3 right-3 z-20 px-3 py-1 rounded-xl bg-black/80 border border-red-600/40 text-white font-black text-[10px] tracking-wider uppercase flex items-center gap-1.5 backdrop-blur-md pointer-events-none">
+          <span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+          <span>IMIRASIRE HD</span>
+        </div>
+
+        <!-- Top Mask Shield -->
+        <div class="mask-shield-top"></div>
+
+        <!-- Bottom Right Logo Mask Shield -->
+        <div class="mask-shield-bottom-right"></div>
+      </div>
+    </section>
+
+    <!-- MOVIE METADATA & SERVER SELECTION SECTION -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- LEFT COLUMN: Movie Info & Servers -->
+      <div class="lg:col-span-2 space-y-5">
+        <!-- Title & Badges -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-2 flex-wrap text-xs">
+            <span class="px-2.5 py-0.5 rounded-md bg-red-600 text-white font-black uppercase tracking-wider">ACTION / THRILLER</span>
+            <span class="px-2.5 py-0.5 rounded-md bg-neutral-800 text-neutral-300 font-bold border border-neutral-700">2026</span>
+            <span class="px-2.5 py-0.5 rounded-md bg-neutral-800 text-neutral-300 font-bold border border-neutral-700">1h 54m</span>
+            <span class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-400 font-bold border border-amber-500/30">HD 1080p</span>
+          </div>
+
+          <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            NKUBA NA GIKERI (Agasobanuye 2026)
+          </h2>
+          <p class="text-xs text-neutral-400">Gasa: <strong class="text-white">Rocky Kimomo</strong> · Imirasire TV Official Release</p>
+        </div>
+
+        <!-- SERVER SELECTION BUTTONS -->
+        <div class="p-4 rounded-2xl bg-neutral-900 border border-neutral-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              HITAMO AHO UREBERA (SERVERS)
+            </h3>
+            <span class="text-[11px] text-neutral-400">Iyo Server 1 yanze, hitamo Server 2</span>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2" id="server-buttons">
+            <button onclick="switchServer('dQw4w9WgXcQ', this)" class="server-btn active px-4 py-2 rounded-xl text-xs font-bold bg-red-600 text-white shadow-lg shadow-red-600/30 transition">
+              Server 1 (Primary HD)
+            </button>
+            <button onclick="switchServer('L_LUpnjgPso', this)" class="server-btn px-4 py-2 rounded-xl text-xs font-bold bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-700 transition">
+              Server 2 (Backup Fast)
+            </button>
+            <button onclick="switchServer('kJQP7kiw5Fk', this)" class="server-btn px-4 py-2 rounded-xl text-xs font-bold bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-700 transition">
+              Server 3 (Mobile Data Saver)
+            </button>
+          </div>
+        </div>
+
+        <!-- QUALITY SELECTION & DOWNLOAD BUTTONS -->
+        <div class="p-4 rounded-2xl bg-neutral-900 border border-neutral-800 space-y-3">
+          <h3 class="text-xs font-black text-white uppercase tracking-wider">
+            UBWIZA BWA VIDEO & KURAMO
+          </h3>
+
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-1.5" id="quality-buttons">
+              <button onclick="selectQuality('1080p', this)" class="quality-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-black shadow-md transition">
+                1080p Full HD
+              </button>
+              <button onclick="selectQuality('720p', this)" class="quality-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-neutral-800 text-neutral-300 border border-neutral-700 hover:text-white transition">
+                720p HD
+              </button>
+              <button onclick="selectQuality('480p', this)" class="quality-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-neutral-800 text-neutral-300 border border-neutral-700 hover:text-white transition">
+                480p SD
+              </button>
+              <button onclick="selectQuality('360p', this)" class="quality-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-neutral-800 text-neutral-300 border border-neutral-700 hover:text-white transition">
+                360p Low
+              </button>
+            </div>
+
+            <a href="#" onclick="alert('Kuramo iri gutangira... (Download starting...)'); return false;" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition active:scale-95">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+              <span>KURAMO (DOWNLOAD)</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="p-4 rounded-2xl bg-neutral-900/60 border border-neutral-800/80 space-y-2">
+          <h3 class="text-xs font-extrabold text-neutral-400 uppercase tracking-wider">IBISOBANURO BYA FILIME</h3>
+          <p class="text-xs text-neutral-300 leading-relaxed font-normal">
+            Iyi filime irimo inkuru idasanzwe y'ubutwari n'ubwubahane. Nkuba na Gikeri barwana ku buzima bwabo mu mugi wa Kigali nyuma yo kumenya amasezerano yihishe inyuma y'ubutunzi buhambaye. Isomire birakaza umurego mu Kinyarwanda cyagasoza!
+          </p>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: VIP Banner & Info -->
+      <div class="space-y-4">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-red-950/80 via-neutral-900 to-black border border-red-600/30 space-y-3">
+          <span class="px-2.5 py-1 rounded-md bg-red-600 text-white font-black text-[10px] tracking-wider uppercase">VIP SPECIAL OFFER</span>
+          <h3 class="text-lg font-black text-white leading-snug">
+            Reba Filime Zose Nta Matangazo & Download Yihuta!
+          </h3>
+          <p class="text-xs text-neutral-300">
+            Kura VIP kuri 500 Frw gusa mu cyumweru urebe ibice byose utarinze gutegereza.
+          </p>
+          <button onclick="alert('Nyabuneka kanda ku numero ya MoMo ukatire VIP: *182*8*1*078...#')" class="w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-xs uppercase tracking-wider shadow-xl shadow-red-600/40 transition active:scale-95">
+            ISHYURA KURI MOMO (500 FRW)
+          </button>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-neutral-900 border border-neutral-800 text-xs text-neutral-400 space-y-1">
+          <p class="font-bold text-white">Nkfasha nte (Keyboard Shortcuts):</p>
+          <p>• <kbd class="px-1.5 py-0.5 rounded bg-neutral-800 text-white font-mono">Space</kbd> : Gukina / Guhagarika</p>
+          <p>• <kbd class="px-1.5 py-0.5 rounded bg-neutral-800 text-white font-mono">F</kbd> : Kwagura screen (Fullscreen)</p>
+          <p>• <kbd class="px-1.5 py-0.5 rounded bg-neutral-800 text-white font-mono">M</kbd> : Gufunga / Gufungura ijwi</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- RELATED MOVIES GRID -->
+    <section class="space-y-4 pt-6 border-t border-neutral-800">
+      <h3 class="text-lg font-black text-white tracking-tight flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-red-600"></span>
+        FILIME ZISOBANUYE ZEREKEYE IYI (RELATED MOVIES)
+      </h3>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <!-- Movie Card 1 -->
+        <div class="group relative rounded-2xl bg-neutral-900 border border-neutral-800 overflow-hidden cursor-pointer hover:border-red-600/60 transition duration-300 hover:-translate-y-1 shadow-lg">
+          <div class="aspect-[2/3] relative overflow-hidden bg-neutral-950">
+            <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500" alt="Rock by bye call" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-85">
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-red-600 text-white font-black text-[9px]">IMIRASIRE</span>
+          </div>
+          <div class="p-2.5">
+            <p class="text-xs font-black text-white truncate group-hover:text-red-500 transition">Rock by bye call</p>
+            <p class="text-[10px] text-neutral-400 mt-0.5 font-mono">2026 · Agasobanuye</p>
+          </div>
+        </div>
+
+        <!-- Movie Card 2 -->
+        <div class="group relative rounded-2xl bg-neutral-900 border border-neutral-800 overflow-hidden cursor-pointer hover:border-red-600/60 transition duration-300 hover:-translate-y-1 shadow-lg">
+          <div class="aspect-[2/3] relative overflow-hidden bg-neutral-950">
+            <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=500" alt="Ikiyoni mu nyanja" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-85">
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-red-600 text-white font-black text-[9px]">IMIRASIRE</span>
+          </div>
+          <div class="p-2.5">
+            <p class="text-xs font-black text-white truncate group-hover:text-red-500 transition">Ikiyoni mu nyanja</p>
+            <p class="text-[10px] text-neutral-400 mt-0.5 font-mono">2026 · Rocky</p>
+          </div>
+        </div>
+
+        <!-- Movie Card 3 -->
+        <div class="group relative rounded-2xl bg-neutral-900 border border-neutral-800 overflow-hidden cursor-pointer hover:border-red-600/60 transition duration-300 hover:-translate-y-1 shadow-lg">
+          <div class="aspect-[2/3] relative overflow-hidden bg-neutral-950">
+            <img src="https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=500" alt="Umuntu n'Isano" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-85">
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-red-600 text-white font-black text-[9px]">IMIRASIRE</span>
+          </div>
+          <div class="p-2.5">
+            <p class="text-xs font-black text-white truncate group-hover:text-red-500 transition">Umuntu n'Isano</p>
+            <p class="text-[10px] text-neutral-400 mt-0.5 font-mono">2025 · Yanga</p>
+          </div>
+        </div>
+
+        <!-- Movie Card 4 -->
+        <div class="group relative rounded-2xl bg-neutral-900 border border-neutral-800 overflow-hidden cursor-pointer hover:border-red-600/60 transition duration-300 hover:-translate-y-1 shadow-lg">
+          <div class="aspect-[2/3] relative overflow-hidden bg-neutral-950">
+            <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=500" alt="Shani n'Inzozi" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-85">
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-red-600 text-white font-black text-[9px]">IMIRASIRE</span>
+          </div>
+          <div class="p-2.5">
+            <p class="text-xs font-black text-white truncate group-hover:text-red-500 transition">Shani n'Inzozi</p>
+            <p class="text-[10px] text-neutral-400 mt-0.5 font-mono">2026 · Junior</p>
+          </div>
+        </div>
+
+        <!-- Movie Card 5 -->
+        <div class="group relative rounded-2xl bg-neutral-900 border border-neutral-800 overflow-hidden cursor-pointer hover:border-red-600/60 transition duration-300 hover:-translate-y-1 shadow-lg hidden sm:block">
+          <div class="aspect-[2/3] relative overflow-hidden bg-neutral-950">
+            <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500" alt="Ikinyamahwa" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-85">
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-red-600 text-white font-black text-[9px]">IMIRASIRE</span>
+          </div>
+          <div class="p-2.5">
+            <p class="text-xs font-black text-white truncate group-hover:text-red-500 transition">Ikinyamahwa Part 2</p>
+            <p class="text-[10px] text-neutral-400 mt-0.5 font-mono">2026 · Sankara</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="mt-12 bg-black border-t border-neutral-800 px-4 py-8 text-center text-xs text-neutral-500 space-y-2">
+    <p>© 2026 IMIRASIRE AGASOBANUYE. Hali copyright zose zirawe n'Irimasire TV.</p>
+    <p class="text-[11px] text-neutral-600">Powered by Plyr.js custom video engine without YouTube watermarks.</p>
+  </footer>
+
+  <!-- Plyr JavaScript Library CDN -->
+  <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+
+  <!-- Custom JavaScript Logic -->
+  <script>
+    // Primary YouTube Video ID (Easy to change here)
+    const VIDEO_ID = 'dQw4w9WgXcQ';
+
+    let playerInstance = null;
+
+    // Initialize Plyr Player with Brandless YouTube Options
+    function initPlayer(videoId) {
+      const container = document.getElementById('player');
+      if (!container) return;
+
+      // Set target HTML data attribute for Plyr YouTube provider
+      container.innerHTML = `<div data-plyr-provider="youtube" data-plyr-embed-id="${videoId}"></div>`;
+
+      if (playerInstance) {
+        playerInstance.destroy();
+      }
+
+      // Instantiate Plyr with parameters that hide native YouTube controls
+      playerInstance = new Plyr('#player div', {
+        youtube: {
+          noCookie: true,
+          rel: 0,
+          showinfo: 0,
+          iv_load_policy: 3,
+          modestbranding: 1,
+          controls: 0, // Let Plyr handle controls
+        },
+        controls: [
+          'play-large',
+          'play',
+          'progress',
+          'current-time',
+          'mute',
+          'volume',
+          'captions',
+          'settings',
+          'pip',
+          'fullscreen',
+        ],
+        tooltips: { controls: true, seek: true },
+        autoplay: false,
+      });
+    }
+
+    // Server Switching Handler
+    function switchServer(videoId, btnElement) {
+      initPlayer(videoId);
+
+      // Update button styling
+      document.querySelectorAll('.server-btn').forEach(btn => {
+        btn.classList.remove('bg-red-600', 'text-white', 'active');
+        btn.classList.add('bg-neutral-800', 'text-neutral-300');
+      });
+
+      if (btnElement) {
+        btnElement.classList.remove('bg-neutral-800', 'text-neutral-300');
+        btnElement.classList.add('bg-red-600', 'text-white', 'active');
+      }
+    }
+
+    // Quality Selection Handler
+    function selectQuality(qualityName, btnElement) {
+      document.querySelectorAll('.quality-btn').forEach(btn => {
+        btn.classList.remove('bg-amber-500', 'text-black', 'active');
+        btn.classList.add('bg-neutral-800', 'text-neutral-300');
+      });
+
+      if (btnElement) {
+        btnElement.classList.remove('bg-neutral-800', 'text-neutral-300');
+        btnElement.classList.add('bg-amber-500', 'text-black', 'active');
+      }
+    }
+
+    // Keyboard Shortcuts Support
+    document.addEventListener('keydown', (e) => {
+      if (!playerInstance) return;
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+      if (e.code === 'Space') {
+        e.preventDefault();
+        playerInstance.togglePlay();
+      } else if (e.code === 'KeyF') {
+        e.preventDefault();
+        playerInstance.fullscreen.toggle();
+      } else if (e.code === 'KeyM') {
+        e.preventDefault();
+        playerInstance.muted = !playerInstance.muted;
+      }
+    });
+
+    // Run player on load
+    document.addEventListener('DOMContentLoaded', () => {
+      initPlayer(VIDEO_ID);
+    });
+  </script>
+</body>
+</html>

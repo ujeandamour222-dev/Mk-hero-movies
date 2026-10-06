@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MK HERO MOVIES - Custom Player Agasobanuye 2026</title>
+  
+  <!-- Plyr CSS CDN -->
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            momo: {
+              DEFAULT: '#00A651', // Vibrant MTN Green
+              dark: '#00853F',
+              light: '#10B981',
+              yellow: '#FFCC00',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* VIBRANT GREEN THEME CUSTOM STYLES */
+    :root {
+      --plyr-color-main: #00A651;
+      --plyr-video-background: #000000;
+      --plyr-badge-border-radius: 6px;
+      --plyr-control-radius: 8px;
+    }
+
+    body {
+      background-color: #0a0a0a;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* Video Player Outer Container */
+    .custom-player-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 Aspect Ratio */
+      background: #000000;
+      border-radius: 1.25rem;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 166, 81, 0.3);
+      border: 1px solid #143822;
+    }
+
+    .custom-player-wrapper .plyr-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .plyr {
+      height: 100% !important;
+      width: 100% !important;
+      border-radius: 1.25rem;
+    }
+
+    .plyr__video-embed {
+      height: 100% !important;
+      width: 100% !important;
+      padding-bottom: 0 !important;
+    }
+
+    .plyr__video-embed iframe {
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) scale(1.04) !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* Gradient Shields to mask YouTube titles & watermarks */
+    .mask-shield-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .mask-shield-bottom-right {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 150px;
+      height: 50px;
+      background: rgba(0, 0, 0, 0.95);
+      border-top-left-radius: 14px;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Custom Player Control Overlays */
+    .player-overlay-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 100%);
+      z-index: 25;
+      display: flex;
+      items-center: center;
+      justify-content: space-between;
+      transition: opacity 0.3s ease;
+    }
+
+    .player-overlay-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.25rem 1rem 1rem 1rem;
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0) 100%);
+      z-index: 25;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: opacity 0.3s ease;
+    }
+
+    /* Range Input Custom Styling */
+    input[type="range"].green-progress {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"].green-progress::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #00A651;
+      box-shadow: 0 0 10px #00A651;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    input[type="range"].green-progress::-webkit-slider-thumb:hover {
+      transform: scale(1.3);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a0a0a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #00A651;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans select-none">
+
+  <!-- STICKY GREEN HEADER -->
+  <header class="sticky top-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-emerald-900/40 px-4 lg:px-8 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#00853F] to-[#00A651] flex items-center justify-center font-black text-white text-xl shadow-lg shadow-emerald-600/30">
+        MK
+      </div>
+      <div>
+        <h1 class="text-lg font-black tracking-tight text-white flex items-center gap-1.5">
+          MK HERO <span class="text-[#00A651]">MOVIES</span>
+        </h1>
+        <p class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">Agasobanuye Cinema HD</p>
+      </div>
+    </div>
+
+    <!-- Header Actions -->
+    <div class="flex items-center gap-3">
+      <button onclick="openPaymentModal()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-[#00853F] to-[#00A651] hover:from-[#00A651] hover:to-[#10B981] text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-emerald-600/30 transition transform active:scale-95 flex items-center gap-1.5 cursor-pointer">
+        <span>💳 KWISHYURA MOMO</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6 space-y-6">
+
+    <!-- CUSTOM DESIGNER VIDEO PLAYER SECTION -->
+    <section class="space-y-3">
+      <div class="custom-player-wrapper group" id="player-container">
+        
+        <!-- Plyr Target Div -->
+        <div class="plyr-container">
+          <div id="player" class="plyr__video-embed"></div>
+        </div>
+
+        <!-- Mask Shields to Hide YouTube Overlay Text & Watermarks -->
+        <div class="mask-shield-top"></div>
+        <div class="mask-shield-bottom-right"></div>
+
+        <!-- 1. TOP CONTROL OVERLAY BAR (Back, Title, Share, Favorite, Settings) -->
+        <div class="player-overlay-top">
+          <button onclick="history.back()" class="w-9 h-9 rounded-full bg-black/60 hover:bg-[#00A651] text-white flex items-center justify-center transition cursor-pointer backdrop-blur-md">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+          </button>
+
+          <div class="text-center truncate px-2 max-w-xs">
+            <p class="text-xs font-black text-white truncate">NKUBA NA GIKERI (Agasobanuye 2026)</p>
+            <p class="text-[10px] text-emerald-400 font-bold">MK HERO MOVIES</p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <!-- Share Icon -->
+            <button onclick="navigator.clipboard.writeText(window.location.href); alert('Link yakopewe neza!');" class="w-8 h-8 rounded-full bg-black/60 hover:bg-[#00A651] text-white flex items-center justify-center transition cursor-pointer backdrop-blur-md">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+            </button>
+            <!-- Favorite/Star Icon -->
+            <button onclick="toggleFavorite(this)" class="w-8 h-8 rounded-full bg-black/60 hover:bg-[#00A651] text-white flex items-center justify-center transition cursor-pointer backdrop-blur-md">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>
+            </button>
+            <!-- Cast / Settings Menu -->
+            <button onclick="openDownloadModal()" class="w-8 h-8 rounded-full bg-black/60 hover:bg-[#00A651] text-white flex items-center justify-center transition cursor-pointer backdrop-blur-md">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. FLOATING "⏭ SIMBUTSA INTRO" BUTTON -->
+        <button
+          id="skip-intro-btn"
+          onclick="skipIntro()"
+          class="absolute top-16 right-4 z-30 px-3.5 py-1.5 rounded-xl bg-black/80 hover:bg-[#00A651] text-white font-black text-xs border border-emerald-500/40 shadow-2xl backdrop-blur-md flex items-center gap-1.5 transition transform hover:scale-105 cursor-pointer"
+        >
+          <span>⏭ Simbutsa Intro (Skip 00:30)</span>
+        </button>
+
+        <!-- 3. BOTTOM OVERLAY CONTROLS ROW -->
+        <div class="player-overlay-bottom">
+          <!-- Progress Bar & Time Stamps Row -->
+          <div class="flex items-center gap-3">
+            <span id="current-time-text" class="text-xs font-mono font-bold text-emerald-400 shrink-0">00:00</span>
+            <input
+              type="range"
+              id="progress-bar"
+              min="0"
+              max="100"
+              value="0"
+              oninput="handleSeek(this.value)"
+              class="green-progress flex-1"
+            />
+            <span id="total-time-text" class="text-xs font-mono font-bold text-neutral-400 shrink-0">00:00</span>
+            
+            <!-- Cast Icon -->
+            <button class="text-neutral-400 hover:text-white transition cursor-pointer shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+            </button>
+          </div>
+
+          <!-- Bottom Control Buttons Row: [⏪ 10s] [⏮] [⏯ PLAY - large center button] [⏭] [10s ⏩] -->
+          <div class="flex items-center justify-center gap-4 sm:gap-6 pt-1">
+            <!-- 10s Backward -->
+            <button onclick="seekBackward(10)" class="p-2 rounded-full text-neutral-300 hover:text-[#00A651] hover:bg-black/40 transition cursor-pointer flex items-center gap-1">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.334 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8l-5.334 4z"></path></svg>
+              <span class="text-[10px] font-bold font-mono">10s</span>
+            </button>
+
+            <!-- Previous Track -->
+            <button onclick="skipBackward(5)" class="p-2 rounded-full text-neutral-300 hover:text-[#00A651] transition cursor-pointer">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path></svg>
+            </button>
+
+            <!-- LARGE CENTER PLAY / PAUSE BUTTON -->
+            <button id="main-play-btn" onclick="togglePlay()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-[#00853F] to-[#00A651] hover:from-[#00A651] hover:to-[#10B981] text-white flex items-center justify-center shadow-xl shadow-emerald-600/40 transition transform hover:scale-110 active:scale-95 cursor-pointer">
+              <svg id="play-icon" class="w-7 h-7 fill-white ml-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+              <svg id="pause-icon" class="w-7 h-7 fill-white hidden" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+            </button>
+
+            <!-- Next Track -->
+            <button onclick="skipForward(5)" class="p-2 rounded-full text-neutral-300 hover:text-[#00A651] transition cursor-pointer">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"></path></svg>
+            </button>
+
+            <!-- 10s Forward -->
+            <button onclick="seekForward(10)" class="p-2 rounded-full text-neutral-300 hover:text-[#00A651] hover:bg-black/40 transition cursor-pointer flex items-center gap-1">
+              <span class="text-[10px] font-bold font-mono">10s</span>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.934 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.334-4zM19.934 12.8a1 1 0 000-1.6l-5.334-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.334-4z"></path></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ACTION BUTTONS ROW -->
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <button
+        onclick="openDownloadModal()"
+        class="py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#00853F] to-[#00A651] hover:from-[#00A651] hover:to-[#10B981] text-white font-black text-xs uppercase tracking-wider shadow-xl shadow-emerald-600/20 flex items-center justify-center gap-2 transition transform active:scale-95 cursor-pointer"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+        <span>⬇ KURURA VIDEO (DOWNLOAD)</span>
+      </button>
+
+      <button
+        onclick="skipIntro()"
+        class="py-3.5 px-4 rounded-2xl bg-neutral-900 hover:bg-neutral-800 text-emerald-400 font-extrabold text-xs uppercase border border-emerald-900/60 flex items-center justify-center gap-2 transition cursor-pointer"
+      >
+        <span>⏭ SIMBUTSA INTRO</span>
+      </button>
+
+      <button
+        onclick="openPaymentModal()"
+        class="py-3.5 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase tracking-wider shadow-xl shadow-amber-500/20 flex items-center justify-center gap-2 transition transform active:scale-95 cursor-pointer"
+      >
+        <span>💳 KWISHYURA MOMO (500 FRW)</span>
+      </button>
+    </section>
+
+    <!-- MOVIE DETAILS & SERVERS -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- LEFT COLUMN -->
+      <div class="lg:col-span-2 space-y-5">
+        <div class="space-y-2">
+          <div class="flex items-center gap-2 flex-wrap text-xs">
+            <span class="px-2.5 py-0.5 rounded-md bg-[#00A651] text-white font-black uppercase tracking-wider">ACTION / THRILLER</span>
+            <span class="px-2.5 py-0.5 rounded-md bg-neutral-900 text-neutral-300 font-bold border border-neutral-800">2026</span>
+            <span class="px-2.5 py-0.5 rounded-md bg-neutral-900 text-neutral-300 font-bold border border-neutral-800">1h 58m</span>
+            <span class="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">HD 1080p</span>
+          </div>
+
+          <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            NKUBA NA GIKERI (Agasobanuye 2026)
+          </h2>
+          <p class="text-xs text-neutral-400">Gasa: <strong class="text-white">Rocky Kimomo</strong> · MK Hero Movies Official Release</p>
+        </div>
+
+        <!-- SERVER SELECTION -->
+        <div class="p-4 rounded-2xl bg-neutral-900/90 border border-neutral-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-[#00A651] animate-pulse"></span>
+              HITAMO AHO UREBERA (SERVERS)
+            </h3>
+            <span class="text-[11px] text-neutral-400">Iyo Server 1 yanze, hitamo Server 2</span>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="switchServer('dQw4w9WgXcQ', this)" class="server-btn active px-4 py-2 rounded-xl text-xs font-bold bg-[#00A651] text-white shadow-lg transition cursor-pointer">
+              Server 1 (Primary HD)
+            </button>
+            <button onclick="switchServer('L_LUpnjgPso', this)" class="server-btn px-4 py-2 rounded-xl text-xs font-bold bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-700 transition cursor-pointer">
+              Server 2 (Backup Fast)
+            </button>
+            <button onclick="switchServer('kJQP7kiw5Fk', this)" class="server-btn px-4 py-2 rounded-xl text-xs font-bold bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-700 transition cursor-pointer">
+              Server 3 (Mobile Data Saver)
+            </button>
+          </div>
+        </div>
+
+        <!-- QUALITY SELECTION -->
+        <div class="p-4 rounded-2xl bg-neutral-900/90 border border-neutral-800 space-y-3">
+          <h3 class="text-xs font-black text-white uppercase tracking-wider">
+            UBWIZA BWA VIDEO (QUALITY)
+          </h3>
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="selectQuality('1080p', this)" class="quality-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-[#00A651] text-white shadow-md transition cursor-pointer">
+              1080p Full HD
+            </button>
+            <button onclick="selectQuality('720p', this)" class="quality-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-neutral-800 text-neutral-300 border border-neutral-700 hover:text-white transition cursor-pointer">
+              720p HD
+            </button>
+            <button onclick="selectQuality('480p', this)" class="quality-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-neutral-800 text-neutral-300 border border-neutral-700 hover:text-white transition cursor-pointer">
+              480p SD
+            </button>
+            <button onclick="selectQuality('360p', this)" class="quality-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-neutral-800 text-neutral-300 border border-neutral-700 hover:text-white transition cursor-pointer">
+              360p Low
+            </button>
+          </div>
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="p-4 rounded-2xl bg-neutral-900/60 border border-neutral-800 space-y-2">
+          <h3 class="text-xs font-extrabold text-emerald-400 uppercase tracking-wider">IBISOBANURO BYA FILIME</h3>
+          <p class="text-xs text-neutral-300 leading-relaxed">
+            Iyi filime irimo inkuru idasanzwe y'ubutwari n'ubwubahane. Nkuba na Gikeri barwana ku buzima bwabo mu mugi wa Kigali nyuma yo kumenya amasezerano yihishe inyuma y'ubutunzi buhambaye. Isomire birakaza umurego mu Kinyarwanda cyagasoza!
+          </p>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: VIP Banner -->
+      <div class="space-y-4">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-emerald-950/80 via-neutral-900 to-black border border-emerald-600/30 space-y-3">
+          <span class="px-2.5 py-1 rounded-md bg-[#00A651] text-white font-black text-[10px] tracking-wider uppercase">VIP SPECIAL OFFER</span>
+          <h3 class="text-lg font-black text-white leading-snug">
+            Reba Filime Zose Nta Matangazo & Download Yihuta!
+          </h3>
+          <p class="text-xs text-neutral-300">
+            Kura VIP kuri 500 Frw gusa mu cyumweru urebe ibice byose utarinze gutegereza.
+          </p>
+          <button onclick="openPaymentModal()" class="w-full py-3 rounded-xl bg-[#00A651] hover:bg-[#00853F] text-white font-black text-xs uppercase tracking-wider shadow-xl shadow-emerald-600/30 transition transform active:scale-95 cursor-pointer">
+            ISHYURA KURI MOMO (500 FRW)
+          </button>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-neutral-900 border border-neutral-800 text-xs text-neutral-400 space-y-1">
+          <p class="font-bold text-white">Nkfasha nte (Keyboard Shortcuts):</p>
+          <p>• <kbd class="px-1.5 py-0.5 rounded bg-neutral-800 text-white font-mono">Space</kbd> : Gukina / Guhagarika</p>
+          <p>• <kbd class="px-1.5 py-0.5 rounded bg-neutral-800 text-white font-mono">F</kbd> : Kwagura screen (Fullscreen)</p>
+          <p>• <kbd class="px-1.5 py-0.5 rounded bg-neutral-800 text-white font-mono">M</kbd> : Gufunga / Gufungura ijwi</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- RELATED MOVIES GRID -->
+    <section class="space-y-4 pt-6 border-t border-neutral-800">
+      <h3 class="text-lg font-black text-white tracking-tight flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-[#00A651]"></span>
+        FILIME ZISOBANUYE ZEREKEYE IYI (RELATED MOVIES)
+      </h3>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <!-- Movie Card 1 -->
+        <div class="group relative rounded-2xl bg-neutral-900 border border-neutral-800 overflow-hidden cursor-pointer hover:border-emerald-500/60 transition duration-300 hover:-translate-y-1 shadow-lg">
+          <div class="aspect-[2/3] relative overflow-hidden bg-neutral-950">
+            <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500" alt="Movie" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-85">
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-[#00A651] text-white font-black text-[9px]">MK HERO</span>
+          </div>
+          <div class="p-2.5">
+            <p class="text-xs font-black text-white truncate group-hover:text-emerald-400 transition">Rock by bye call</p>
+            <p class="text-[10px] text-neutral-400 mt-0.5 font-mono">2026 · Agasobanuye</p>
+          </div>
+        </div>
+
+        <!-- Movie Card 2 -->
+        <div class="group relative rounded-2xl bg-neutral-900 border border-neutral-800 overflow-hidden cursor-pointer hover:border-emerald-500/60 transition duration-300 hover:-translate-y-1 shadow-lg">
+          <div class="aspect-[2/3] relative overflow-hidden bg-neutral-950">
+            <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=500" alt="Movie" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-85">
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-[#00A651] text-white font-black text-[9px]">MK HERO</span>
+          </div>
+          <div class="p-2.5">
+            <p class="text-xs font-black text-white truncate group-hover:text-emerald-400 transition">Ikiyoni mu nyanja</p>
+            <p class="text-[10px] text-neutral-400 mt-0.5 font-mono">2026 · Rocky</p>
+          </div>
+        </div>
+
+        <!-- Movie Card 3 -->
+        <div class="group relative rounded-2xl bg-neutral-900 border border-neutral-800 overflow-hidden cursor-pointer hover:border-emerald-500/60 transition duration-300 hover:-translate-y-1 shadow-lg">
+          <div class="aspect-[2/3] relative overflow-hidden bg-neutral-950">
+            <img src="https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=500" alt="Movie" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-85">
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-[#00A651] text-white font-black text-[9px]">MK HERO</span>
+          </div>
+          <div class="p-2.5">
+            <p class="text-xs font-black text-white truncate group-hover:text-emerald-400 transition">Umuntu n'Isano</p>
+            <p class="text-[10px] text-neutral-400 mt-0.5 font-mono">2025 · Yanga</p>
+          </div>
+        </div>
+
+        <!-- Movie Card 4 -->
+        <div class="group relative rounded-2xl bg-neutral-900 border border-neutral-800 overflow-hidden cursor-pointer hover:border-emerald-500/60 transition duration-300 hover:-translate-y-1 shadow-lg">
+          <div class="aspect-[2/3] relative overflow-hidden bg-neutral-950">
+            <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=500" alt="Movie" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-85">
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-[#00A651] text-white font-black text-[9px]">MK HERO</span>
+          </div>
+          <div class="p-2.5">
+            <p class="text-xs font-black text-white truncate group-hover:text-emerald-400 transition">Shani n'Inzozi</p>
+            <p class="text-[10px] text-neutral-400 mt-0.5 font-mono">2026 · Junior</p>
+          </div>
+        </div>
+
+        <!-- Movie Card 5 -->
+        <div class="group relative rounded-2xl bg-neutral-900 border border-neutral-800 overflow-hidden cursor-pointer hover:border-emerald-500/60 transition duration-300 hover:-translate-y-1 shadow-lg hidden sm:block">
+          <div class="aspect-[2/3] relative overflow-hidden bg-neutral-950">
+            <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500" alt="Movie" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-85">
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-[#00A651] text-white font-black text-[9px]">MK HERO</span>
+          </div>
+          <div class="p-2.5">
+            <p class="text-xs font-black text-white truncate group-hover:text-emerald-400 transition">Ikinyamahwa Part 2</p>
+            <p class="text-[10px] text-neutral-400 mt-0.5 font-mono">2026 · Sankara</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- TWO-TIER PAYMENT MODAL -->
+  <div id="payment-modal" class="fixed inset-0 z-[1000] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-md font-sans">
+    <div class="relative w-full max-w-md rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-[#00381b] via-[#007034] to-[#012411] border-2 border-[#ffcc00] text-white shadow-[0_0_60px_rgba(0,200,83,0.4)] overflow-hidden">
+      
+      <!-- Close Button -->
+      <button onclick="closePaymentModal()" class="absolute top-4 right-4 p-2 rounded-full bg-black/40 text-neutral-300 hover:text-white transition cursor-pointer z-20">
+        ✕
+      </button>
+
+      <!-- Tier Switcher -->
+      <div class="mb-5 p-1 rounded-2xl bg-black/50 border border-emerald-500/30 flex items-center text-xs font-extrabold">
+        <button id="tier-1-btn" onclick="switchTier(1)" class="flex-1 py-2 rounded-xl bg-[#00A651] text-white shadow transition cursor-pointer">
+          One-Click MoMo
+        </button>
+        <button id="tier-2-btn" onclick="switchTier(2)" class="flex-1 py-2 rounded-xl text-neutral-400 hover:text-white transition flex items-center justify-center gap-1 cursor-pointer">
+          <span>Automatic API</span>
+          <span class="px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 text-[9px] border border-amber-500/30">Vuba</span>
+        </button>
+      </div>
+
+      <!-- TIER 1: ONE-CLICK DIALER FORM -->
+      <div id="tier-1-form" class="space-y-4">
+        <div class="text-center space-y-1">
+          <h3 class="text-xl font-black text-white">Kwishyura MoMo (One-Click)</h3>
+          <p class="text-xs text-emerald-100">Kanda kuri bouton, telefoni yahita ifungura dialer neza!</p>
+        </div>
+
+        <div class="p-3 rounded-2xl bg-black/40 border border-emerald-500/30 flex items-center justify-between text-xs font-mono">
+          <span class="text-emerald-200">Merchant Code:</span>
+          <strong class="text-[#ffcc00] font-black text-sm">1115705</strong>
+        </div>
+
+        <div>
+          <label class="block text-xs font-black text-emerald-200 uppercase mb-1">Nimero ya Telefone</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-emerald-300 text-xs font-mono font-bold">+250</span>
+            <input type="tel" id="momo-phone" placeholder="788 123 456" class="w-full pl-14 pr-4 py-3 rounded-xl bg-black/50 border border-emerald-500/40 text-white font-mono text-sm outline-none focus:border-[#ffcc00]" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-black text-emerald-200 uppercase mb-1">Umubare (RWF)</label>
+          <input type="number" id="momo-amount" value="500" readonly class="w-full px-4 py-3 rounded-xl bg-black/50 border border-emerald-500/40 text-amber-300 font-mono font-bold text-base outline-none" />
+        </div>
+
+        <button onclick="triggerOneClickDialer()" class="w-full py-4 rounded-2xl bg-[#ffcc00] hover:bg-yellow-400 text-black font-black text-xs uppercase tracking-wider shadow-2xl transition transform active:scale-95 cursor-pointer flex items-center justify-center gap-2">
+          <span>📞 KWISHYURA MOMO (ONE-CLICK)</span>
+        </button>
+      </div>
+
+      <!-- TIER 2: AUTOMATIC STK PUSH API PLACEHOLDER -->
+      <div id="tier-2-form" class="hidden space-y-4">
+        <div class="text-center space-y-1">
+          <h3 class="text-xl font-black text-white">Automatic STK Push</h3>
+          <p class="text-xs text-emerald-100">Ikora ku buryo bwikora API yakira MoMo ubutumwa!</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-black/40 border border-amber-500/30 text-xs text-amber-200 space-y-2">
+          <p class="font-bold text-amber-300">🚧 Vuba Aha (Coming Soon API):</p>
+          <p class="text-[11px] text-neutral-300 leading-relaxed">
+            Iyi backend irateguye guhita yoherereza STK prompt kuri telefoni yawe udafite guhamagara.
+          </p>
+        </div>
+
+        <button onclick="triggerAutomaticApiPush()" class="w-full py-4 rounded-2xl bg-emerald-700 text-neutral-300 font-black text-xs uppercase cursor-not-allowed opacity-80 flex items-center justify-center gap-2">
+          <span>⚡ AUTOMATIC STK PUSH (SOON)</span>
+        </button>
+      </div>
+
+      <!-- SUCCESS SCREEN AFTER DIALING -->
+      <div id="momo-success-screen" class="hidden py-4 text-center space-y-4">
+        <div class="w-16 h-16 mx-auto rounded-full bg-[#ffcc00] text-black flex items-center justify-center font-black text-2xl shadow-xl">
+          ✓
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-xl font-black text-white">Code Yoherejwe!</h3>
+          <p class="text-xs text-emerald-100 max-w-xs mx-auto">
+            Kanda <strong class="text-[#ffcc00]">Call</strong> (agati k'icyatsi) kuri telefoni yawe, wemeze na PIN.
+          </p>
+        </div>
+
+        <p class="text-xs font-mono text-emerald-200">
+          Tegereza amasegonda: <strong id="momo-timer" class="text-[#ffcc00] text-sm">120s</strong>
+        </p>
+
+        <button onclick="closePaymentModal()" class="w-full py-3 rounded-xl bg-black/40 border border-emerald-400/40 text-white font-extrabold text-xs cursor-pointer">
+          Narangije Kwishyura
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DOWNLOAD MODAL -->
+  <div id="download-modal" class="fixed inset-0 z-[1000] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-md font-sans">
+    <div class="relative w-full max-w-md rounded-3xl p-6 bg-neutral-900 border border-emerald-500/40 text-white space-y-4">
+      <button onclick="closeDownloadModal()" class="absolute top-4 right-4 text-neutral-400 hover:text-white cursor-pointer">✕</button>
+      <h3 class="text-lg font-black text-[#00A651]">⬇ KURURA VIDEO (DOWNLOAD)</h3>
+      <p class="text-xs text-neutral-300 leading-relaxed">
+        Kugira ngo ukurure iri filime kuri telefoni/Soma yawe:
+      </p>
+      <ol class="text-xs text-neutral-300 space-y-2 list-decimal pl-4 font-medium">
+        <li>Kopiya link y'iyi filime iri haruguru.</li>
+        <li>Jya kuri <strong>y2mate.is</strong> cyangwa <strong>savefrom.net</strong>.</li>
+        <li>Bika (Paste) link maze ukande Download HD!</li>
+      </ol>
+      <button onclick="navigator.clipboard.writeText(window.location.href); alert('Link yakopewe neza!');" class="w-full py-3 rounded-xl bg-[#00A651] font-black text-xs uppercase cursor-pointer">
+        Kopiya Link Ya Filime
+      </button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="mt-12 bg-black border-t border-neutral-900 px-4 py-8 text-center text-xs text-neutral-500 space-y-2">
+    <p>© 2026 MK HERO MOVIES. All rights reserved.</p>
+    <p class="text-[11px] text-neutral-600">Powered by Custom Designer Video Player Engine with Vibrant Green theme & MoMo integration.</p>
+  </footer>
+
+  <!-- Plyr JS CDN -->
+  <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+
+  <!-- CUSTOM JAVASCRIPT CONTROLLER -->
+  <script>
+    const VIDEO_ID = 'dQw4w9WgXcQ';
+    const MERCHANT_CODE = '1115705';
+
+    let playerInstance = null;
+    let timerInterval = null;
+    let isPlaying = false;
+
+    // Format Seconds to MM:SS
+    function formatTime(seconds) {
+      if (isNaN(seconds)) return '00:00';
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    // Initialize Custom Video Player
+    function initPlayer(videoId) {
+      const container = document.getElementById('player');
+      if (!container) return;
+
+      container.innerHTML = `<div data-plyr-provider="youtube" data-plyr-embed-id="${videoId}"></div>`;
+
+      if (playerInstance) {
+        playerInstance.destroy();
+      }
+
+      playerInstance = new Plyr('#player div', {
+        youtube: {
+          noCookie: true,
+          rel: 0,
+          showinfo: 0,
+          iv_load_policy: 3,
+          modestbranding: 1,
+          controls: 0, // Let custom overlay handle control events
+        },
+        controls: [],
+        autoplay: false,
+      });
+
+      // Player Event Listeners for Custom Controls Update
+      playerInstance.on('ready', () => {
+        document.getElementById('total-time-text').innerText = formatTime(playerInstance.duration);
+      });
+
+      playerInstance.on('timeupdate', () => {
+        const cur = playerInstance.currentTime;
+        const dur = playerInstance.duration || 1;
+        document.getElementById('current-time-text').innerText = formatTime(cur);
+        document.getElementById('total-time-text').innerText = formatTime(dur);
+
+        // Update progress bar
+        const percent = (cur / dur) * 100;
+        document.getElementById('progress-bar').value = percent;
+
+        // Skip Intro floating button visibility
+        const skipBtn = document.getElementById('skip-intro-btn');
+        if (skipBtn) {
+          if (cur > 0 && cur < 30) {
+            skipBtn.classList.remove('hidden');
+          } else {
+            skipBtn.classList.add('hidden');
+          }
+        }
+      });
+
+      playerInstance.on('play', () => {
+        isPlaying = true;
+        document.getElementById('play-icon').classList.add('hidden');
+        document.getElementById('pause-icon').classList.remove('hidden');
+      });
+
+      playerInstance.on('pause', () => {
+        isPlaying = false;
+        document.getElementById('play-icon').classList.remove('hidden');
+        document.getElementById('pause-icon').classList.add('hidden');
+      });
+    }
+
+    // Toggle Play/Pause
+    function togglePlay() {
+      if (!playerInstance) return;
+      playerInstance.togglePlay();
+    }
+
+    // Custom Seek
+    function handleSeek(percent) {
+      if (!playerInstance || !playerInstance.duration) return;
+      const targetTime = (percent / 100) * playerInstance.duration;
+      playerInstance.currentTime = targetTime;
+    }
+
+    // 10s Seek Forward & Backward
+    function seekForward(sec = 10) {
+      if (playerInstance) playerInstance.currentTime += sec;
+    }
+
+    function seekBackward(sec = 10) {
+      if (playerInstance) playerInstance.currentTime -= sec;
+    }
+
+    function skipForward(sec = 5) {
+      if (playerInstance) playerInstance.currentTime += sec;
+    }
+
+    function skipBackward(sec = 5) {
+      if (playerInstance) playerInstance.currentTime -= sec;
+    }
+
+    function skipIntro() {
+      if (playerInstance) {
+        playerInstance.currentTime = 30;
+        playerInstance.play();
+      }
+    }
+
+    function toggleFavorite(btn) {
+      btn.classList.toggle('text-yellow-400');
+    }
+
+    // Server Switcher
+    function switchServer(videoId, btnElement) {
+      initPlayer(videoId);
+      document.querySelectorAll('.server-btn').forEach(btn => {
+        btn.classList.remove('bg-[#00A651]', 'text-white', 'active');
+        btn.classList.add('bg-neutral-800', 'text-neutral-300');
+      });
+      if (btnElement) {
+        btnElement.classList.remove('bg-neutral-800', 'text-neutral-300');
+        btnElement.classList.add('bg-[#00A651]', 'text-white', 'active');
+      }
+    }
+
+    // Quality Selection
+    function selectQuality(quality, btnElement) {
+      document.querySelectorAll('.quality-btn').forEach(btn => {
+        btn.classList.remove('bg-[#00A651]', 'text-white', 'active');
+        btn.classList.add('bg-neutral-800', 'text-neutral-300');
+      });
+      if (btnElement) {
+        btnElement.classList.remove('bg-neutral-800', 'text-neutral-300');
+        btnElement.classList.add('bg-[#00A651]', 'text-white', 'active');
+      }
+    }
+
+    // Modal Handlers
+    function openPaymentModal() {
+      document.getElementById('payment-modal').classList.remove('hidden');
+      document.getElementById('payment-modal').classList.add('flex');
+    }
+
+    function closePaymentModal() {
+      document.getElementById('payment-modal').classList.add('hidden');
+      document.getElementById('payment-modal').classList.remove('flex');
+      if (timerInterval) clearInterval(timerInterval);
+    }
+
+    function openDownloadModal() {
+      document.getElementById('download-modal').classList.remove('hidden');
+      document.getElementById('download-modal').classList.add('flex');
+    }
+
+    function closeDownloadModal() {
+      document.getElementById('download-modal').classList.add('hidden');
+      document.getElementById('download-modal').classList.remove('flex');
+    }
+
+    function switchTier(tier) {
+      if (tier === 1) {
+        document.getElementById('tier-1-form').classList.remove('hidden');
+        document.getElementById('tier-2-form').classList.add('hidden');
+        document.getElementById('tier-1-btn').className = "flex-1 py-2 rounded-xl bg-[#00A651] text-white shadow transition cursor-pointer";
+        document.getElementById('tier-2-btn').className = "flex-1 py-2 rounded-xl text-neutral-400 hover:text-white transition flex items-center justify-center gap-1 cursor-pointer";
+      } else {
+        document.getElementById('tier-1-form').classList.add('hidden');
+        document.getElementById('tier-2-form').classList.remove('hidden');
+        document.getElementById('tier-2-btn').className = "flex-1 py-2 rounded-xl bg-[#00A651] text-white shadow transition flex items-center justify-center gap-1 cursor-pointer";
+        document.getElementById('tier-1-btn').className = "flex-1 py-2 rounded-xl text-neutral-400 hover:text-white transition cursor-pointer";
+      }
+    }
+
+    function triggerOneClickDialer() {
+      const amount = document.getElementById('momo-amount').value || '500';
+      const ussdCode = `*182*8*1*${MERCHANT_CODE}*${amount}#`;
+
+      window.location.href = `tel:${encodeURIComponent(ussdCode)}`;
+
+      document.getElementById('tier-1-form').classList.add('hidden');
+      document.getElementById('momo-success-screen').classList.remove('hidden');
+
+      let timer = 120;
+      document.getElementById('momo-timer').innerText = timer + 's';
+      if (timerInterval) clearInterval(timerInterval);
+
+      timerInterval = setInterval(() => {
+        timer--;
+        document.getElementById('momo-timer').innerText = timer + 's';
+        if (timer <= 0) {
+          clearInterval(timerInterval);
+          closePaymentModal();
+        }
+      }, 1000);
+    }
+
+    function triggerAutomaticApiPush() {
+      alert('Uburyo bwa Automatic STK Push buri kwitegurwa vuba!');
+    }
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+      if (e.code === 'Space') {
+        e.preventDefault();
+        togglePlay();
+      } else if (e.code === 'ArrowRight') {
+        seekForward(10);
+      } else if (e.code === 'ArrowLeft') {
+        seekBackward(10);
+      } else if (e.code === 'KeyF') {
+        e.preventDefault();
+        if (playerInstance) playerInstance.fullscreen.toggle();
+      } else if (e.code === 'KeyM') {
+        e.preventDefault();
+        if (playerInstance) playerInstance.muted = !playerInstance.muted;
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initPlayer(VIDEO_ID);
+    });
+  </script>
+</body>
+</html>

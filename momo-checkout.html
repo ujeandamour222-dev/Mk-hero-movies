@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automatic MoMo Checkout - Imirasire TV / MK Hero Movies</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* Smooth CSS Theme Transitions */
+    .checkout-card {
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Pulse Radar Animation */
+    @keyframes radarPulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    .animate-radar {
+      animation: radarPulse 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-neutral-950 text-white min-h-screen flex items-center justify-center p-4 font-sans">
+
+  <!-- CHECKOUT MODAL CARD -->
+  <div id="checkout-modal" class="checkout-card relative w-full max-w-md rounded-3xl p-6 sm:p-8 bg-gradient-to-b from-neutral-900 via-neutral-950 to-black border-2 border-red-600/50 shadow-[0_20px_60px_rgba(229,9,20,0.3)] overflow-hidden">
+    
+    <!-- Background Ambient Glow -->
+    <div id="ambient-glow" class="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-red-600/20 blur-3xl pointer-events-none transition-colors duration-700"></div>
+
+    <!-- STATE 1: INITIAL DARK/RED FORM -->
+    <div id="state-form" class="space-y-5">
+      <!-- Header -->
+      <div class="text-center space-y-1">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-600/20 text-red-400 text-[11px] font-black uppercase tracking-wider border border-red-500/30">
+          ⚡ AUTOMATIC MOMO CHECKOUT
+        </div>
+        <h2 class="text-xl font-black tracking-tight text-white">
+          Kwishyura <span class="text-red-500">VIP Access</span>
+        </h2>
+        <p class="text-xs text-neutral-400">
+          Ubwishyu bwihuta cyane bw'akanya gato kuri Mobile Money
+        </p>
+      </div>
+
+      <!-- Merchant Code Badge -->
+      <div class="p-3.5 rounded-2xl bg-neutral-950 border border-neutral-800 flex items-center justify-between text-xs">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold">
+            Code
+          </div>
+          <div>
+            <p class="text-[10px] text-neutral-400 uppercase font-bold tracking-wider">Merchant Code</p>
+            <p class="font-mono font-black text-amber-400 text-sm">1115705</p>
+          </div>
+        </div>
+        <span class="text-[10px] text-neutral-400 font-mono bg-neutral-900 px-2.5 py-1 rounded-lg border border-neutral-800">
+          *182*8*1*1115705#
+        </span>
+      </div>
+
+      <!-- Form -->
+      <form id="momo-form" onsubmit="handlePaySubmit(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-black text-neutral-300 uppercase tracking-wider mb-1.5">
+            Nimero ya Telefone (MTN / Airtel)
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-neutral-400 text-xs font-bold font-mono">
+              +250
+            </span>
+            <input
+              type="tel"
+              id="phone-input"
+              required
+              placeholder="788 123 456"
+              class="w-full pl-16 pr-4 py-3 rounded-2xl bg-neutral-950 border border-neutral-800 text-white font-mono text-sm outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600 transition"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-black text-neutral-300 uppercase tracking-wider mb-1.5">
+            Igiciro CYO KWISHYURA (RWF)
+          </label>
+          <div class="relative">
+            <input
+              type="number"
+              id="amount-input"
+              required
+              value="500"
+              class="w-full px-4 py-3 rounded-2xl bg-neutral-950 border border-neutral-800 text-amber-400 font-mono font-black text-base outline-none"
+            />
+            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-neutral-400">
+              RWF
+            </span>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-4 rounded-2xl bg-gradient-to-r from-red-600 via-red-500 to-amber-500 hover:from-red-500 hover:to-amber-400 text-white font-black text-xs uppercase tracking-wider shadow-xl shadow-red-600/30 transition transform active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+        >
+          <span>KWISHYURA (500 RWF)</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- STATE 2: VIBRANT GREEN THEME LOADING STATE -->
+    <div id="state-processing" class="hidden py-4 text-center space-y-6">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/40 border border-[#ffcc00]/40 text-[#ffcc00] text-xs font-black uppercase tracking-wider backdrop-blur-md">
+        <span class="w-2 h-2 rounded-full bg-[#ffcc00] animate-ping"></span>
+        <span>MTN Mobile Money Push</span>
+      </div>
+
+      <!-- Radar Animation -->
+      <div class="relative w-28 h-28 mx-auto flex items-center justify-center">
+        <div class="absolute inset-0 rounded-full border-4 border-[#ffcc00]/30 animate-radar"></div>
+        <div class="absolute inset-2 rounded-full border-4 border-white/30 animate-spin border-t-[#ffcc00]"></div>
+        <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-[#ffcc00] to-yellow-300 text-black flex items-center justify-center shadow-2xl z-10 font-bold text-2xl">
+          📱
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-xl font-black text-white tracking-tight leading-snug animate-pulse">
+          Tegereza... Wemeze kuri telefoni yawe
+        </h3>
+        <p class="text-xs text-emerald-100 font-medium max-w-xs mx-auto leading-relaxed">
+          Twaboherereje ubutumwa bw'ubwishyu kuri nimero <strong id="display-phone" class="text-[#ffcc00] font-mono">+250 788 123 456</strong>. Shyiramo PIN yawe wemeze ubwishyu.
+        </p>
+      </div>
+
+      <!-- Details -->
+      <div class="p-4 rounded-2xl bg-black/40 border border-emerald-500/30 text-xs space-y-1.5 text-left font-mono">
+        <div class="flex justify-between text-emerald-200">
+          <span>Merchant Code:</span>
+          <strong class="text-[#ffcc00]">1115705</strong>
+        </div>
+        <div class="flex justify-between text-emerald-200">
+          <span>Umubare (Amount):</span>
+          <strong id="display-amount" class="text-white">500 RWF</strong>
+        </div>
+        <div class="flex justify-between text-emerald-200">
+          <span>Status:</span>
+          <span class="text-yellow-300 font-bold">Iri gutegereza PIN...</span>
+        </div>
+      </div>
+
+      <div class="pt-2 space-y-3">
+        <p class="text-[11px] text-emerald-200 font-mono">
+          Tegereza amasegonda: <strong id="timer-count" class="text-[#ffcc00] text-sm">45s</strong>
+        </p>
+
+        <button
+          onclick="handleConfirmSuccess()"
+          class="w-full py-3.5 rounded-2xl bg-[#ffcc00] hover:bg-yellow-400 text-black font-black text-xs uppercase tracking-wider shadow-2xl transition transform active:scale-95 cursor-pointer"
+        >
+          Narangije Kwishyura (Confirm)
+        </button>
+      </div>
+    </div>
+
+    <!-- STATE 3: SUCCESS STATE -->
+    <div id="state-success" class="hidden py-6 text-center space-y-5">
+      <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-[#ffcc00] to-emerald-400 text-black flex items-center justify-center shadow-2xl border-4 border-white/20 font-black text-3xl">
+        ✓
+      </div>
+      <div class="space-y-1">
+        <h3 class="text-2xl font-black text-white tracking-tight">
+          UBWISHYU BWEMEWE!
+        </h3>
+        <p class="text-xs text-emerald-100 font-medium">
+          VIP Access yawe yafungutse neza! Murakoze cyane.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let countdownInterval = null;
+
+    function handlePaySubmit(e) {
+      e.preventDefault();
+      const phoneInput = document.getElementById('phone-input').value;
+      const amountInput = document.getElementById('amount-input').value;
+
+      if (!phoneInput) {
+        alert('Nyamuneka shyiramo nimero ya telefone!');
+        return;
+      }
+
+      // Format phone
+      let clean = phoneInput.replace(/\D/g, '');
+      if (clean.startsWith('250')) clean = clean.substring(3);
+      const formatted = '+250 ' + clean;
+
+      document.getElementById('display-phone').innerText = formatted;
+      document.getElementById('display-amount').innerText = amountInput + ' RWF';
+
+      // SMOOTH THEME TRANSITION TO VIBRANT GREEN!
+      const card = document.getElementById('checkout-modal');
+      const glow = document.getElementById('ambient-glow');
+
+      card.className = "checkout-card relative w-full max-w-md rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-[#00381b] via-[#007034] to-[#012411] border-2 border-[#ffcc00] text-white shadow-[0_0_60px_rgba(0,200,83,0.5)] overflow-hidden scale-[1.02]";
+      glow.className = "absolute -top-24 -right-24 w-48 h-48 rounded-full bg-[#ffcc00]/25 blur-3xl pointer-events-none transition-colors duration-700";
+
+      document.getElementById('state-form').classList.add('hidden');
+      document.getElementById('state-processing').classList.remove('hidden');
+
+      // Countdown
+      let count = 45;
+      document.getElementById('timer-count').innerText = count + 's';
+      if (countdownInterval) clearInterval(countdownInterval);
+
+      countdownInterval = setInterval(() => {
+        count--;
+        document.getElementById('timer-count').innerText = count + 's';
+        if (count <= 0) {
+          clearInterval(countdownInterval);
+          handleConfirmSuccess();
+        }
+      }, 1000);
+    }
+
+    function handleConfirmSuccess() {
+      if (countdownInterval) clearInterval(countdownInterval);
+      document.getElementById('state-processing').classList.add('hidden');
+      document.getElementById('state-success').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

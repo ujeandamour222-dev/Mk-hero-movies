@@ -1,0 +1,32 @@
+@import "tailwindcss";
+@import "plyr/dist/plyr.css";
+
+:root {
+  --plyr-color-main: #00A651;
+  --plyr-video-background: #000000;
+  --plyr-badge-border-radius: 8px;
+  --plyr-control-radius: 8px;
+  --plyr-font-family: inherit;
+}
+
+.plyr {
+  border-radius: 1.5rem;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+/* Ensure YouTube iframe fills Plyr container nicely */
+.plyr__video-embed {
+  height: 100% !important;
+  width: 100% !important;
+  padding-bottom: 0 !important;
+}
+
+.plyr__video-embed iframe {
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 100% !important;
+  height: 100% !important;
+}

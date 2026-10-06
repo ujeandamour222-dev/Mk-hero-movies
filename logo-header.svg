@@ -1,0 +1,8 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 160' width='600' height='160'>
+  <rect width='600' height='160' fill='transparent'/>
+  <g transform='translate(20, 20)'>
+    <path d='M 20,120 L 20,20 L 60,85 L 100,20 L 100,120 M 100,20 L 170,120 M 125,60 L 170,20' fill='none' stroke='#00A651' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/>
+  </g>
+  <text x='210' y='75' font-family='Arial Black, sans-serif' font-weight='900' font-size='52' fill='#FFFFFF'>HERO</text>
+  <text x='210' y='128' font-family='Arial Black, sans-serif' font-weight='900' font-size='46' fill='#FFFFFF' letter-spacing='2'>MOVIES</text>
+</svg>
