@@ -1,0 +1,177 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile stored in Firestore",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Firebase Auth UID" },
+        "name": { "type": "string", "description": "Full name" },
+        "emailOrPhone": { "type": "string", "description": "Email or phone identifier" },
+        "role": { "type": "string", "enum": ["user", "admin"], "description": "User access role" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "ISO timestamp" }
+      },
+      "required": ["id", "name", "emailOrPhone", "role", "createdAt"]
+    },
+    "Settings": {
+      "title": "Settings",
+      "description": "Global application configuration",
+      "type": "object",
+      "properties": {
+        "appName": { "type": "string" },
+        "theme": { "type": "string" },
+        "contactPhone": { "type": "string" },
+        "maintenanceMode": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "VideoServer": {
+      "title": "VideoServer",
+      "description": "Server hosting a video stream/download",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "serverName": { "type": "string" },
+        "serverUrl": { "type": "string" },
+        "quality": { "type": "string" },
+        "type": { "type": "string" },
+        "downloadEnabled": { "type": "boolean" },
+        "downloadUrl": { "type": "string" },
+        "createdAt": { "type": "string" }
+      }
+    },
+    "Movie": {
+      "title": "Movie",
+      "description": "Movie document",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "slug": { "type": "string" },
+        "posterUrl": { "type": "string" },
+        "backdropUrl": { "type": "string" },
+        "description": { "type": "string" },
+        "year": { "type": "number" },
+        "genre": { "type": "string" },
+        "country": { "type": "string" },
+        "language": { "type": "string" },
+        "duration": { "type": "string" },
+        "rating": { "type": "string" },
+        "featured": { "type": "boolean" },
+        "trending": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["published", "draft"] },
+        "downloadUrl": { "type": "string" },
+        "views": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      }
+    },
+    "Series": {
+      "title": "Series",
+      "description": "TV Series document",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "slug": { "type": "string" },
+        "posterUrl": { "type": "string" },
+        "backdropUrl": { "type": "string" },
+        "description": { "type": "string" },
+        "year": { "type": "number" },
+        "genre": { "type": "string" },
+        "country": { "type": "string" },
+        "language": { "type": "string" },
+        "featured": { "type": "boolean" },
+        "trending": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["published", "draft"] },
+        "seasonsCount": { "type": "number" },
+        "totalEpisodes": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      }
+    },
+    "Episode": {
+      "title": "Episode",
+      "description": "Episode of a TV Series",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "seriesId": { "type": "string" },
+        "seasonNumber": { "type": "number" },
+        "episodeNumber": { "type": "number" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "thumbnailUrl": { "type": "string" },
+        "duration": { "type": "string" },
+        "downloadUrl": { "type": "string" },
+        "createdAt": { "type": "string" }
+      }
+    },
+    "Ad": {
+      "title": "Ad",
+      "description": "Advertisement document",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "type": { "type": "string", "enum": ["preroll", "midroll", "postroll", "banner"] },
+        "mediaUrl": { "type": "string" },
+        "targetUrl": { "type": "string" },
+        "startTime": { "type": "number" },
+        "duration": { "type": "number" },
+        "enabled": { "type": "boolean" }
+      }
+    },
+    "History": {
+      "title": "History",
+      "description": "User watch progress and playback history",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "contentId": { "type": "string" },
+        "contentType": { "type": "string", "enum": ["movie", "series"] },
+        "title": { "type": "string" },
+        "posterUrl": { "type": "string" },
+        "progress": { "type": "number" },
+        "duration": { "type": "number" },
+        "lastPosition": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/settings/global": {
+      "schema": "Settings",
+      "description": "Global app settings"
+    },
+    "/movies/{movieId}": {
+      "schema": "Movie",
+      "description": "Movies collection"
+    },
+    "/movies/{movieId}/servers/{serverId}": {
+      "schema": "VideoServer",
+      "description": "Video servers for a movie"
+    },
+    "/series/{seriesId}": {
+      "schema": "Series",
+      "description": "Series collection"
+    },
+    "/episodes/{episodeId}": {
+      "schema": "Episode",
+      "description": "Episodes collection"
+    },
+    "/ads/{adId}": {
+      "schema": "Ad",
+      "description": "Advertisements collection"
+    },
+    "/history/{historyId}": {
+      "schema": "History",
+      "description": "User watch history and playback progress"
+    }
+  }
+}
