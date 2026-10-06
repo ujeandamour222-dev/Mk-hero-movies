@@ -1,0 +1,93 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        getUserData().role == 'admin';
+    }
+
+    // Users collection
+    match /users/{userId} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if isAdmin();
+    }
+
+    // Settings collection (Public read, Admin write)
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Movies collection & subcollections (Public read, write allowed for applet shim/admin)
+    match /movies/{movieId} {
+      allow read, write: if true;
+
+      match /servers/{serverId} {
+        allow read, write: if true;
+      }
+    }
+
+    // Series collection & subcollections
+    match /series/{seriesId} {
+      allow read, write: if true;
+
+      match /seasons/{seasonId} {
+        allow read, write: if true;
+
+        match /episodes/{episodeId} {
+          allow read, write: if true;
+        }
+      }
+    }
+
+    // Episodes collection
+    match /episodes/{episodeId} {
+      allow read, write: if true;
+
+      match /servers/{serverId} {
+        allow read, write: if true;
+      }
+    }
+
+    // Categories collection
+    match /categories/{categoryId} {
+      allow read, write: if true;
+    }
+
+    // Ads collection
+    match /ads/{adId} {
+      allow read, write: if true;
+    }
+
+    // Favorites collection
+    match /favorites/{favoriteId} {
+      allow read, write: if true;
+    }
+
+    // Watch History collection
+    match /history/{historyId} {
+      allow read, write: if true;
+    }
+
+    // Contact Messages collection
+    match /contactMessages/{messageId} {
+      allow read, write: if true;
+    }
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

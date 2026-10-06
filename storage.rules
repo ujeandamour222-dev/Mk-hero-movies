@@ -1,0 +1,28 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Check if requesting user has role == 'admin' in the app's custom Firestore database
+    function isAdmin() {
+      return request.auth != null &&
+        firestore.get(/databases/ai-studio-mkheromovies-f3ed6f2b-c86f-411a-9343-7758853f3cc9/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Public read for videos; write restricted to authenticated admin users (up to 2GB)
+    match /videos/{videoId} {
+      allow read: if true;
+      allow write: if isAdmin() && request.resource.size < 2 * 1024 * 1024 * 1024;
+    }
+
+    // Public read for posters; write restricted to authenticated admin users (up to 15MB)
+    match /posters/{posterId} {
+      allow read: if true;
+      allow write: if isAdmin() && request.resource.size < 15 * 1024 * 1024;
+    }
+
+    // Deny all other access
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

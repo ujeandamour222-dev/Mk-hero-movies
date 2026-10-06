@@ -1,0 +1,6 @@
+{
+  "name": "MK HERO MOVIES",
+  "description": "Rwandan movie and series streaming platform featuring Kinyarwanda translated and local films.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
